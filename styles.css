@@ -477,6 +477,195 @@ a:hover {
 }
 
 /* ============================================================
+   TIMELINE (Gantt-style career + education overview)
+   ============================================================ */
+
+.timeline {
+    margin: 0 0 2.5rem;
+    padding: 1.5rem 0 0.75rem;
+    background: linear-gradient(180deg, transparent 0%, var(--surface) 100%);
+    border-radius: var(--radius-lg);
+}
+
+.timeline-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.timeline-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 0.85rem;
+    align-items: center;
+}
+
+.timeline-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+}
+
+.timeline-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow: hidden;
+    padding: 4px;
+}
+
+.timeline-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.timeline-logo--placeholder {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+    padding: 0;
+}
+
+.timeline-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    min-width: 0;
+}
+
+.timeline-org {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.timeline-span {
+    font-size: 0.6875rem;
+    color: var(--text-subtle);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    margin-top: 1px;
+}
+
+.timeline-track {
+    position: relative;
+    height: 14px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.timeline-bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--start);
+    width: calc(var(--end) - var(--start));
+    border-radius: 999px;
+    transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.timeline-bar--work {
+    background: var(--accent);
+}
+
+.timeline-bar--education {
+    background: color-mix(in srgb, var(--accent) 40%, transparent);
+    border: 1px solid var(--accent);
+    box-sizing: border-box;
+}
+
+.timeline-bar--current {
+    background: linear-gradient(90deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 75%, var(--hero-accent)) 100%);
+}
+
+.timeline-bar--current::after {
+    /* tiny glow at the end to indicate "still going" */
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hero-accent);
+    transform: translateY(-50%);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--hero-accent) 30%, transparent);
+}
+
+.timeline-row:hover .timeline-bar {
+    filter: brightness(1.08);
+}
+
+/* Year axis — only spans the track column so percentages map cleanly */
+.timeline-axis {
+    position: relative;
+    margin-left: calc(130px + 0.85rem);
+    margin-top: 0.5rem;
+    height: 1.1rem;
+}
+
+.timeline-tick {
+    position: absolute;
+    left: var(--p);
+    transform: translateX(-50%);
+    top: 0;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-subtle);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.timeline-tick--now {
+    transform: translateX(-100%);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Narrower screens — tighten label column */
+@media (max-width: 640px) {
+    .timeline-row {
+        grid-template-columns: 100px 1fr;
+        gap: 0.6rem;
+    }
+    .timeline-axis {
+        margin-left: calc(100px + 0.6rem);
+    }
+    .timeline-org {
+        font-size: 0.75rem;
+    }
+    .timeline-span {
+        font-size: 0.625rem;
+    }
+    .timeline-logo {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* ============================================================
    CTA / FOOTER
    ============================================================ */
 
