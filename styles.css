@@ -1,8 +1,8 @@
 /* ============================================================
    Craig Jones — Personal Site
-   Design intent: editorial-modern. Serif headlines (Newsreader)
-   over a clean sans body (Inter). Warm off-white backgrounds.
-   Deep teal accent. Fully responsive. Auto dark mode.
+   Design intent: editorial-modern. Hero band on deep teal,
+   tight vertical rhythm, two-column experience layout on
+   desktop that stacks gracefully on mobile. Auto dark mode.
    ============================================================ */
 
 :root {
@@ -12,20 +12,23 @@
     --text-muted: #6b6b66;
     --accent: #0d4a4a;
     --accent-hover: #0a3a3a;
+    --accent-soft: #d4e5e3;
+    --accent-tint: #ecf3f2;
     --rule: #e8e6df;
-    --chip-bg: #f1efe8;
-    --chip-border: #e2dfd5;
+    --chip-bg: #ecf3f2;
+    --chip-border: #b9d3cf;
+    --chip-text: #0d4a4a;
+
+    --hero-bg: #0d4a4a;
+    --hero-text: #fbfaf7;
+    --hero-muted: #a3c5c1;
+    --hero-accent: #f4c97a;
 
     --font-serif: "Newsreader", ui-serif, Georgia, "Times New Roman", serif;
     --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-    --measure: 38rem;
-    --space-xs: 0.5rem;
-    --space-sm: 0.75rem;
-    --space-md: 1.25rem;
-    --space-lg: 2rem;
-    --space-xl: 3.5rem;
-    --space-2xl: 5rem;
+    --measure-wide: 60rem;
+    --measure-prose: 36rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -34,11 +37,19 @@
         --surface: #18181a;
         --text: #f5f3ee;
         --text-muted: #a8a59e;
-        --accent: #4eb3aa;
-        --accent-hover: #6cc3bb;
+        --accent: #6cc3bb;
+        --accent-hover: #8fd5cd;
+        --accent-soft: #1f3a39;
+        --accent-tint: #163030;
         --rule: #2a2a26;
-        --chip-bg: #1f1f1c;
-        --chip-border: #2e2e2a;
+        --chip-bg: #163030;
+        --chip-border: #2c5450;
+        --chip-text: #8fd5cd;
+
+        --hero-bg: #082d2d;
+        --hero-text: #f5f3ee;
+        --hero-muted: #8da9a5;
+        --hero-accent: #f4c97a;
     }
 }
 
@@ -58,7 +69,7 @@ body {
     color: var(--text);
     font-family: var(--font-sans);
     font-size: 17px;
-    line-height: 1.65;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
 }
@@ -80,157 +91,333 @@ a:hover {
     background: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-.container {
-    max-width: var(--measure);
-    margin: 0 auto;
-    padding: var(--space-2xl) 1.5rem var(--space-xl);
+/* ============================================================
+   HERO BAND — full-bleed colored panel at the top
+   ============================================================ */
+
+.hero-band {
+    background: var(--hero-bg);
+    background-image:
+        radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--hero-accent) 18%, transparent) 0%, transparent 55%),
+        radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--accent-hover) 60%, transparent) 0%, transparent 50%);
+    color: var(--hero-text);
+    padding: clamp(2.5rem, 6vw, 4.5rem) 1.5rem clamp(2.5rem, 6vw, 4.5rem);
+    position: relative;
+    overflow: hidden;
 }
 
-/* ---------- HERO ---------- */
+.hero-band::after {
+    /* subtle bottom accent stripe */
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--hero-accent) 0%, var(--accent) 60%, transparent 100%);
+}
 
 .hero {
-    margin-bottom: var(--space-xl);
+    max-width: var(--measure-wide);
+    margin: 0 auto;
 }
 
-.name {
+.hero-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--hero-muted);
+    margin: 0 0 0.75rem;
+}
+
+.hero-name {
     font-family: var(--font-serif);
     font-weight: 600;
-    font-size: clamp(2.5rem, 7vw, 3.75rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    margin: 0 0 var(--space-sm);
+    font-size: clamp(2.75rem, 8vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin: 0 0 1rem;
+    color: var(--hero-text);
 }
 
-.tagline {
-    font-size: 1rem;
-    color: var(--text-muted);
-    margin: 0 0 var(--space-md);
-    letter-spacing: 0.005em;
+.hero-name::after {
+    /* a decorative period in the accent color, magazine style */
+    content: ".";
+    color: var(--hero-accent);
+    margin-left: -0.05em;
 }
 
-.tagline .role {
-    color: var(--text);
-    font-weight: 500;
+.hero-tagline {
+    font-family: var(--font-serif);
+    font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+    line-height: 1.45;
+    color: var(--hero-text);
+    max-width: 38rem;
+    margin: 0 0 1.5rem;
+    opacity: 0.92;
 }
 
-.tagline .sep {
-    margin: 0 0.5em;
-    opacity: 0.5;
+.hero-tagline strong {
+    color: var(--hero-accent);
+    font-weight: 600;
+    font-style: italic;
 }
 
-.hero-rule {
-    width: 3.5rem;
-    height: 2px;
-    background: var(--accent);
-    border-radius: 1px;
-    margin-top: var(--space-md);
+.hero-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    font-size: 0.9375rem;
+    align-items: center;
 }
 
-/* ---------- SECTIONS ---------- */
+.hero-links a {
+    color: var(--hero-text);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--hero-text) 35%, transparent);
+    padding-bottom: 1px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.hero-links a:hover {
+    color: var(--hero-accent);
+    border-color: var(--hero-accent);
+}
+
+.hero-location {
+    color: var(--hero-muted);
+}
+
+/* ============================================================
+   CONTAINER + SECTIONS
+   ============================================================ */
+
+.container {
+    max-width: var(--measure-wide);
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+}
 
 .section {
-    padding: var(--space-xl) 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem 2.5rem;
+    padding: 2.25rem 0;
     border-top: 1px solid var(--rule);
+}
+
+.section:first-of-type {
+    border-top: none;
+    padding-top: 2.5rem;
 }
 
 .section-title {
     font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: 1.125rem;
+    font-weight: 600;
+    font-size: 0.9rem;
     font-style: italic;
-    letter-spacing: 0.01em;
-    color: var(--text-muted);
-    margin: 0 0 var(--space-lg);
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    margin: 0;
     text-transform: lowercase;
+    position: relative;
+    padding-left: 1.25rem;
 }
+
+.section-title::before {
+    /* small colored marker */
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 0.75rem;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+}
+
+.section-body {
+    margin: 0;
+}
+
+@media (min-width: 880px) {
+    .section {
+        grid-template-columns: 180px 1fr;
+        gap: 0 2.5rem;
+        padding: 2.75rem 0;
+    }
+    .section-title {
+        font-size: 0.95rem;
+        padding-left: 0;
+        padding-top: 0.4rem;
+        position: sticky;
+        top: 1rem;
+        align-self: start;
+    }
+    .section-title::before {
+        position: relative;
+        display: block;
+        top: auto;
+        left: auto;
+        width: 1.75rem;
+        height: 2px;
+        margin-bottom: 0.6rem;
+    }
+}
+
+/* ============================================================
+   PROSE
+   ============================================================ */
 
 .prose {
     font-size: 1.0625rem;
-    margin: 0 0 var(--space-md);
-    max-width: 32rem;
+    line-height: 1.65;
+    margin: 0 0 1rem;
+    max-width: var(--measure-prose);
 }
 
 .prose:last-child {
     margin-bottom: 0;
 }
 
-/* ---------- ENTRIES (experience / education) ---------- */
+.prose.lead {
+    font-family: var(--font-serif);
+    font-size: clamp(1.15rem, 1.4vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.prose strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ============================================================
+   ENTRY CARDS (experience / education)
+   ============================================================ */
 
 .entry {
-    margin-bottom: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1.25rem 0;
+    border-top: 1px dashed var(--rule);
 }
 
-.entry:last-child {
-    margin-bottom: 0;
+.entry:first-child {
+    border-top: none;
+    padding-top: 0.25rem;
 }
 
-.entry-head {
+.entry-meta-col {
     display: flex;
     flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
     align-items: baseline;
-    gap: 0.25rem 1rem;
-    margin-bottom: var(--space-xs);
+}
+
+.entry-period {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.entry-org {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.entry-body {
+    margin: 0;
 }
 
 .entry-title {
     font-family: var(--font-serif);
     font-weight: 600;
-    font-size: 1.25rem;
+    font-size: 1.1875rem;
     line-height: 1.3;
-    margin: 0;
+    margin: 0 0 0.35rem;
     letter-spacing: -0.005em;
 }
 
-.entry-meta {
-    font-size: 0.9375rem;
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-}
-
 .entry-bullets {
-    margin: var(--space-sm) 0 0;
+    margin: 0.45rem 0 0;
     padding-left: 1.1rem;
 }
 
 .entry-bullets li {
     margin-bottom: 0.4rem;
-    padding-left: 0.25rem;
+    line-height: 1.55;
+    padding-left: 0.15rem;
+}
+
+.entry-bullets li:last-child {
+    margin-bottom: 0;
 }
 
 .entry-bullets li::marker {
     color: var(--accent);
 }
 
-.entry-detail {
-    margin: var(--space-sm) 0 0;
-    color: var(--text-muted);
-    font-size: 0.9375rem;
+.entry-bullets strong {
+    color: var(--accent);
+    font-weight: 600;
 }
 
-@media (max-width: 540px) {
-    .entry-head {
+.entry-detail {
+    margin: 0.35rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+}
+
+.entry-detail strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+@media (min-width: 720px) {
+    .entry {
+        grid-template-columns: 170px 1fr;
+        gap: 0 2rem;
+        padding: 1.5rem 0;
+    }
+    .entry-meta-col {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.15rem;
+        gap: 0.2rem;
+        padding-top: 0.3rem;
     }
 }
 
-/* ---------- SKILLS ---------- */
+/* ============================================================
+   SKILLS
+   ============================================================ */
 
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem 2rem;
 }
 
 .skill-group-title {
     font-family: var(--font-sans);
     font-weight: 600;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin: 0 0 var(--space-sm);
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin: 0 0 0.75rem;
 }
 
 .chip-list {
@@ -246,31 +433,56 @@ a:hover {
     font-size: 0.875rem;
     background: var(--chip-bg);
     border: 1px solid var(--chip-border);
-    color: var(--text);
-    padding: 0.3rem 0.7rem;
+    color: var(--chip-text);
+    padding: 0.3rem 0.75rem;
     border-radius: 999px;
     line-height: 1.2;
+    font-weight: 500;
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
-/* ---------- CTA ---------- */
+.chip:hover {
+    background: var(--accent-soft);
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   CTA / FOOTER
+   ============================================================ */
+
+.section-cta {
+    background: var(--accent-tint);
+    border-radius: 12px;
+    padding: 2rem 1.75rem;
+    margin-top: 2rem;
+    border-top: none;
+}
+
+@media (min-width: 880px) {
+    .section-cta {
+        padding: 2.25rem;
+        gap: 0 2.5rem;
+    }
+}
 
 .cta-row {
-    margin: var(--space-md) 0 0;
+    margin: 1.25rem 0 0;
 }
 
 .cta {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1.4rem;
     font-family: var(--font-sans);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.9375rem;
     color: var(--bg);
     background: var(--accent);
     text-decoration: none;
-    border-radius: 6px;
-    transition: background 0.15s ease, transform 0.15s ease;
+    border-radius: 999px;
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 0 0 color-mix(in srgb, var(--accent-hover) 50%, transparent);
 }
 
 .cta:hover {
@@ -278,19 +490,21 @@ a:hover {
     color: var(--bg);
     text-decoration: none;
     transform: translateY(-1px);
+    box-shadow: 0 4px 0 0 color-mix(in srgb, var(--accent-hover) 50%, transparent);
 }
 
-/* ---------- FOOTER ---------- */
-
 .footer {
-    margin-top: var(--space-2xl);
-    padding-top: var(--space-md);
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
     border-top: 1px solid var(--rule);
     color: var(--text-muted);
     font-size: 0.875rem;
+    text-align: center;
 }
 
-/* ---------- PRINT (so visitors can ⌘P → Save as PDF) ---------- */
+/* ============================================================
+   PRINT (so visitors can ⌘P → Save as PDF)
+   ============================================================ */
 
 @media print {
     :root {
@@ -299,28 +513,48 @@ a:hover {
         --text-muted: #444444;
         --accent: #0d4a4a;
         --rule: #cccccc;
+        --chip-bg: transparent;
+        --chip-border: #cccccc;
+        --chip-text: #1a1a1a;
     }
     body {
-        font-size: 11pt;
-        line-height: 1.45;
+        font-size: 10.5pt;
+        line-height: 1.4;
     }
-    .container {
-        max-width: 100%;
-        padding: 0.5in;
+    .hero-band {
+        background: none;
+        color: #000;
+        padding: 0 0 0.5in;
+        border-bottom: 2px solid #0d4a4a;
+        margin-bottom: 0.25in;
     }
+    .hero-band::after { display: none; }
+    .hero-name { color: #000; font-size: 28pt; }
+    .hero-name::after { color: #0d4a4a; }
+    .hero-tagline { color: #000; font-size: 11pt; }
+    .hero-tagline strong { color: #0d4a4a; }
+    .hero-eyebrow, .hero-location { color: #444; }
+    .hero-links a {
+        color: #000;
+        border: none;
+    }
+    .container { max-width: 100%; padding: 0 0.5in 0.5in; }
     .section {
-        padding: 1rem 0;
+        grid-template-columns: 130px 1fr;
+        gap: 0 1.5rem;
+        padding: 0.75rem 0;
         page-break-inside: avoid;
     }
-    .cta,
-    .cta-row {
-        display: none;
+    .section-title {
+        position: static;
+        font-size: 9pt;
+        padding-left: 0;
     }
-    a {
-        color: var(--text);
-        text-decoration: none;
-    }
-    .name {
-        font-size: 28pt;
-    }
+    .section-cta { display: none; }
+    .footer { display: none; }
+    .cta, .cta-row { display: none; }
+    a { color: #000; text-decoration: none; }
+    .entry { grid-template-columns: 130px 1fr; gap: 0 1.5rem; padding: 0.5rem 0; }
+    .entry-title { font-size: 11pt; }
+    .entry-bullets li { margin-bottom: 0.15rem; }
 }
