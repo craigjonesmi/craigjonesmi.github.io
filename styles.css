@@ -118,6 +118,42 @@ a:hover {
 .hero {
     max-width: var(--measure-wide);
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+}
+
+.hero-content {
+    min-width: 0;
+}
+
+@media (min-width: 720px) {
+    .hero {
+        grid-template-columns: 1fr auto;
+        gap: 3rem;
+    }
+}
+
+.hero-photo {
+    margin: 0;
+    order: -1;
+}
+
+.hero-photo img {
+    display: block;
+    width: clamp(110px, 16vw, 180px);
+    height: clamp(110px, 16vw, 180px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid color-mix(in srgb, var(--hero-text) 12%, transparent);
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+}
+
+@media (min-width: 720px) {
+    .hero-photo {
+        order: 0;
+    }
 }
 
 .hero-eyebrow {
@@ -152,6 +188,13 @@ a:hover {
     color: var(--hero-text);
     font-weight: 600;
     opacity: 1;
+}
+
+.hero-sep {
+    color: var(--hero-muted);
+    margin: 0 0.15em;
+    opacity: 0.7;
+    font-weight: 300;
 }
 
 .hero-links {
